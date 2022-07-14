@@ -1,4 +1,9 @@
 const router = require("express").Router();
+const {
+  fieldsMatch,
+  hasOnlyNameAndValue,
+  hasCorrectDataType,
+} = require("../../validators");
 
 const STEPS = [
   [
@@ -57,6 +62,55 @@ const getOnboarding = async (req, res, next) => {
   }
 };
 
-router.route("/").get(getOnboarding).all(methodNotAllowed);
+const postOnboarding = async (req, res, next) => {
+  try {
+    const { user, body } = req;
+
+    if (!user) {
+      return res.sendStatus(401);
+    }
+
+    if (user.completedOnboarding) {
+      return res.status(403).json({
+        error: "You have already set your onboarding information.",
+      });
+    }
+
+    const allowedFields = [...STEPS[0], ...STEPS[1]];
+    const postedFields = [...body.steps[0], ...body.steps[1]];
+
+    if (!fieldsMatch(allowedFields, postedFields)) {
+      return res.status(400).json({
+        error: "We don't expect this type of fields.",
+      });
+    }
+
+    if (!hasOnlyNameAndValue(postedFields)) {
+      return res.status(400).json({
+        error: "Wrong request body format.",
+      });
+    }
+
+    if (!hasCorrectDataType(allowedFields, postedFields)) {
+      return res.status(400).json({
+        error: "Wrong field(s) data type.",
+      });
+    }
+
+    postedFields.forEach(({ name, value }) => {
+      user[name] = value;
+    });
+
+    user.completedOnboarding = true;
+    user.updatedAt = new Date();
+    await user.save();
+
+    res.status(200).json({ user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.route("/").get(getOnboarding).post(postOnboarding).all(methodNotAllowed);
 
 module.exports = router;
