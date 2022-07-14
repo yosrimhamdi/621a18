@@ -105,7 +105,7 @@ const postOnboarding = async (req, res, next) => {
     user.updatedAt = new Date();
     await user.save();
 
-    res.status(200).json({ user });
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }

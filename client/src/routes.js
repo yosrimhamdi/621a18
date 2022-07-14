@@ -106,7 +106,7 @@ const Routes = (props) => {
           exact
           path="/"
           render={(props) =>
-            user?.id ? (
+            user?.id && user.completedOnboarding ? (
               <Home user={user} logout={logout} />
             ) : (
               <Signup user={user} register={register} />
