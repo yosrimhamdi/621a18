@@ -17,7 +17,6 @@ const FormSecondStep = ({ inputs, setCurrentStep, values, setValues }) => {
     }
 
     history.push("/home");
-    console.log(values);
   };
 
   const renderedInputs = inputs.map((input, i) => (
