@@ -1,4 +1,5 @@
 import React from "react";
+import { Switch, FormControlLabel, TextField } from "@material-ui/core";
 
 import { isInValidInput } from "./helpers";
 
@@ -7,47 +8,43 @@ const Input = ({ input, values, setValues, hasSubmitted }) => {
 
   if (type === "yes-no") {
     return (
-      <div
-        className={`toggle-switch-container ${
-          isInValidInput(values, name) && hasSubmitted
-            ? "toggle-switch-container--error"
-            : ""
-        }`}
-      >
-        <div
-          className={`toggle-switch ${
-            values[name].value ? "toggle-switch--checked" : ""
-          }`}
-          onClick={() => {
-            setValues({
-              ...values,
-              [name]: { ...values[name], value: !values[name].value },
-            });
-          }}
-        ></div>
-        {label}
-      </div>
+      <FormControlLabel
+        label={label}
+        control={
+          <Switch
+            color="primary"
+            defaultChecked={values[name].value}
+            onClick={() => {
+              setValues({
+                ...values,
+                [name]: { ...values[name], value: !values[name].value },
+              });
+            }}
+          />
+        }
+      />
     );
   }
 
   return (
-    <div>
-      <label className="label">{label}</label>
-      <input
-        name={name}
-        type={type}
-        className={`input ${
-          isInValidInput(values, name) && hasSubmitted ? "input-error" : ""
-        }`}
-        value={values[name].value}
-        onChange={(e) =>
-          setValues({
-            ...values,
-            [name]: { ...values[name], value: e.target.value },
-          })
-        }
-      />
-    </div>
+    <TextField
+      color="primary"
+      style={{ marginBottom: "2em" }}
+      label={label}
+      name={name}
+      variant="standard"
+      fullWidth
+      multiline={type === "multiline-text"}
+      error={isInValidInput(values, name) && hasSubmitted}
+      value={values[name].value}
+      rows="5"
+      onChange={(e) =>
+        setValues({
+          ...values,
+          [name]: { ...values[name], value: e.target.value },
+        })
+      }
+    />
   );
 };
 

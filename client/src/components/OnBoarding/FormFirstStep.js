@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import { Button, Container, Box } from "@material-ui/core";
 
 import Input from "./Input";
 import { isFormValid } from "./helpers";
+import ErrorMessage from "./ErrorMessage";
 
 const FormFirstStep = ({ inputs, setCurrentStep, values, setValues }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  const onFormSubmit = (e) => {
-    e.preventDefault();
+  const onNextButtonClick = () => {
     setHasSubmitted(true);
 
     if (!isFormValid(inputs, values)) {
@@ -17,9 +18,9 @@ const FormFirstStep = ({ inputs, setCurrentStep, values, setValues }) => {
     setCurrentStep(2);
   };
 
-  const renderedInputs = inputs.map((input, i) => (
+  const renderedInputs = inputs.map((input) => (
     <Input
-      key={i}
+      key={input.name}
       input={input}
       values={values}
       setValues={setValues}
@@ -28,21 +29,21 @@ const FormFirstStep = ({ inputs, setCurrentStep, values, setValues }) => {
   ));
 
   return (
-    <form className="form" onSubmit={onFormSubmit}>
-      <div>{renderedInputs}</div>
-      {hasSubmitted && !isFormValid(inputs, values) && (
-        <div className="error-message">
-          Please fill out all required fields before proceeding
-        </div>
-      )}
-      <button
-        className={`button button--right ${
-          isFormValid(inputs, values) ? "button--valid" : ""
-        }`}
-      >
-        Next
-      </button>
-    </form>
+    <>
+      <Container disableGutters>{renderedInputs}</Container>
+      <ErrorMessage showError={hasSubmitted && !isFormValid(inputs, values)} />
+      <Box sx={{ textAlign: "right" }}>
+        <Box sx={{ display: "inline-block" }} onClick={onNextButtonClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!isFormValid(inputs, values)}
+          >
+            Next
+          </Button>
+        </Box>
+      </Box>
+    </>
   );
 };
 

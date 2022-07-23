@@ -1,5 +1,7 @@
 export const isInValidInput = (values, inputName) => {
-  return values[inputName].required && !values[inputName].value;
+  const { required, value, type } = values[inputName];
+
+  return required && !value && type !== "yes-no";
 };
 
 export const isFormValid = (inputs, values) => {

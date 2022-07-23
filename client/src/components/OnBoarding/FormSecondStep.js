@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { Button, ButtonGroup, Container, Box } from "@material-ui/core";
 
 import Input from "./Input";
+import ErrorMessage from "./ErrorMessage";
 import { isFormValid } from "./helpers";
 
 const FormSecondStep = ({ inputs, setCurrentStep, values, setValues }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const history = useHistory();
 
-  const onFormSubmit = (e) => {
-    e.preventDefault();
+  const onFinishButtonClick = () => {
     setHasSubmitted(true);
 
     if (!isFormValid(inputs, values)) {
@@ -19,9 +20,9 @@ const FormSecondStep = ({ inputs, setCurrentStep, values, setValues }) => {
     history.push("/home");
   };
 
-  const renderedInputs = inputs.map((input, i) => (
+  const renderedInputs = inputs.map((input) => (
     <Input
-      key={i}
+      key={input.name}
       input={input}
       values={values}
       setValues={setValues}
@@ -30,30 +31,34 @@ const FormSecondStep = ({ inputs, setCurrentStep, values, setValues }) => {
   ));
 
   return (
-    <form className="form" onSubmit={onFormSubmit}>
-      <div className="inputs-wrapper">{renderedInputs}</div>
-      {hasSubmitted && !isFormValid(inputs, values) && (
-        <div className="error-message">
-          Please fill out all required fields before proceeding
-        </div>
-      )}
-      <div className="buttons-wrapper">
-        <button
-          type="button"
-          className="button button--valid"
+    <>
+      <Container disableGutters>{renderedInputs}</Container>
+      <ErrorMessage showError={hasSubmitted && !isFormValid(inputs, values)} />
+      <ButtonGroup
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "1.5em",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
           onClick={() => setCurrentStep(1)}
         >
           Back
-        </button>
-        <button
-          className={`button ${
-            isFormValid(inputs, values) ? "button--valid" : ""
-          }`}
-        >
-          Finish
-        </button>
-      </div>
-    </form>
+        </Button>
+        <Box sx={{ display: "inline-block" }} onClick={onFinishButtonClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!isFormValid(inputs, values)}
+          >
+            Finish
+          </Button>
+        </Box>
+      </ButtonGroup>
+    </>
   );
 };
 

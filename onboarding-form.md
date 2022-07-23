@@ -9,11 +9,11 @@
 ## Drawbacks around saving the onboarding steps data in the front-end:
 
 - There is no consistency between the front and the back-end.
-- We can add additional form inputs and submit a post request the server and we might receive an error from the server.
+- We can add additional form inputs and submit post requests to the server and we might receive an error from the server.
 
 ## Benefits around saving the onboarding steps data in the back-end:
 
-- The form inputs, therefore the request body will be predefined and expected by the server.
+- The form inputs will be predefined and expected by the server.
 - Easy server-side request body validation.
 - By changing the steps on the server, the front-end UI will change automatically (if it is done the right way).
 
