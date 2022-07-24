@@ -5,6 +5,7 @@ import { Route, Switch, withRouter } from "react-router-dom";
 import Signup from "./Signup.js";
 import Login from "./Login.js";
 import { SnackbarError, Home } from "./components";
+import OnBoarding from "./components/OnBoarding/OnBoarding.js";
 
 const Routes = (props) => {
   const [user, setUser] = useState({
@@ -92,6 +93,7 @@ const Routes = (props) => {
         />
       )}
       <Switch>
+        <Route path="/onboarding" render={() => <OnBoarding />} />
         <Route
           path="/login"
           render={() => <Login user={user} login={login} />}
@@ -104,7 +106,7 @@ const Routes = (props) => {
           exact
           path="/"
           render={(props) =>
-            user?.id ? (
+            user?.id && user.completedOnboarding ? (
               <Home user={user} logout={logout} />
             ) : (
               <Signup user={user} register={register} />
