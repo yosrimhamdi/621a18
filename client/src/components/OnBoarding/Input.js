@@ -13,8 +13,8 @@ const Input = ({ input, values, setValues, hasSubmitted }) => {
         control={
           <Switch
             color="primary"
-            defaultChecked={values[name].value}
-            onClick={() => {
+            checked={values[name].value}
+            onChange={() => {
               setValues({
                 ...values,
                 [name]: { ...values[name], value: !values[name].value },
