@@ -1,15 +1,11 @@
-const fieldsMatch = (allowedFields, postedFields) => {
-  return !postedFields
-    .map((postedField) => {
-      for (const allowedField of allowedFields) {
-        if (allowedField.name === postedField.name) {
-          return true;
-        }
-      }
+const isMissingRequiredField = (allowedFields, postedFields) => {
+  const requiredFields = allowedFields.filter((field) => field.required);
 
-      return false;
+  return requiredFields
+    .map((requiredField) => {
+      return postedFields.find((field) => field.name === requiredField.name);
     })
-    .includes(false);
+    .includes(undefined);
 };
 
 const hasOnlyNameAndValue = (postedFields) => {
@@ -46,4 +42,8 @@ const hasCorrectDataType = (allowedFields, postedFields) => {
     .includes(false);
 };
 
-module.exports = { fieldsMatch, hasOnlyNameAndValue, hasCorrectDataType };
+module.exports = {
+  isMissingRequiredField,
+  hasOnlyNameAndValue,
+  hasCorrectDataType,
+};

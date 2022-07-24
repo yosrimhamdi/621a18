@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const {
-  fieldsMatch,
+  isMissingRequiredField,
   hasOnlyNameAndValue,
   hasCorrectDataType,
 } = require("../../validators");
@@ -78,9 +78,9 @@ const postOnboarding = async (req, res, next) => {
   const allowedFields = [...STEPS[0], ...STEPS[1]];
   const postedFields = [...body.steps[0], ...body.steps[1]];
 
-  if (!fieldsMatch(allowedFields, postedFields)) {
+  if (isMissingRequiredField(allowedFields, postedFields)) {
     return res.status(400).json({
-      error: "We don't expect this type of fields.",
+      error: "Missing required field(s).",
     });
   }
 
